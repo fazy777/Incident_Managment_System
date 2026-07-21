@@ -1,28 +1,24 @@
 import React from 'react';
-import { ChevronRight, Plus, User, AppWindow } from 'lucide-react';
+import { ChevronRight, Plus, User, Layers } from 'lucide-react';
 
 export default function SubHeader({ ticket }) {
   return (
     <div className="subheader-bar">
       <div className="subheader-left">
-        <span className="breadcrumb-item link">Organization (Create)</span>
-        <ChevronRight size={14} className="separator" />
-        <span className="breadcrumb-item link">{ticket.customerName}</span>
-        <ChevronRight size={14} className="separator" />
-        <span className="badge-new">New</span>
-        <span className="ticket-id">Ticket #{ticket.ticketId}</span>
-        <ChevronRight size={14} className="separator" />
-        <button className="side-conv-btn">
-          Side conversations <Plus size={14} />
-        </button>
+        <span className="breadcrumb-link">Organization</span>
+        <ChevronRight size={13} className="text-gray-400" />
+        <span className="breadcrumb-link">{ticket.customerName}</span>
+        <ChevronRight size={13} className="text-gray-400" />
+        <span className="ticket-status-tag">New</span>
+        <span className="ticket-number">Ticket #{ticket.ticketId}</span>
       </div>
 
       <div className="subheader-right">
-        <button className="toggle-btn active">
-          <User size={15} /> <span>User</span>
+        <button className="side-conv-btn">
+          <Plus size={13} /> Side conversation
         </button>
-        <button className="toggle-btn">
-          <AppWindow size={15} /> <span>Apps</span>
+        <button className="view-toggle-btn active">
+          <User size={14} /> Requester Details
         </button>
       </div>
     </div>

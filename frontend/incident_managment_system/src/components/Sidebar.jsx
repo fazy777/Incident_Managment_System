@@ -1,20 +1,18 @@
 import React from 'react';
-import { Home, Ticket, Users, BarChart3, Settings, Layers } from 'lucide-react';
+import { ShieldAlert, Ticket, Users, Settings } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const navItems = [
-    { id: 'home', icon: Home, label: 'Dashboard' },
-    { id: 'tickets', icon: Ticket, label: 'Incidents & Tickets' },
-    { id: 'users', icon: Users, label: 'Customers' },
-    { id: 'analytics', icon: BarChart3, label: 'Analytics' },
+    { id: 'tickets', icon: Ticket, label: 'Incidents' },
+    { id: 'users', icon: Users, label: 'Requesters' },
     { id: 'settings', icon: Settings, label: 'Settings' }
   ];
 
   return (
     <aside className="sidebar">
       <div className="sidebar-logo">
-        <div className="logo-badge">
-          <Layers size={22} color="#ffffff" />
+        <div className="logo-icon">
+          <ShieldAlert size={20} color="#ffffff" />
         </div>
       </div>
 
@@ -25,20 +23,16 @@ export default function Sidebar({ activeTab, setActiveTab }) {
           return (
             <button
               key={item.id}
-              className={`nav-btn ${isActive ? 'active' : ''}`}
+              className={`nav-item ${isActive ? 'active' : ''}`}
               onClick={() => setActiveTab(item.id)}
               title={item.label}
             >
-              <Icon size={20} />
-              <span className="tooltip">{item.label}</span>
+              <Icon size={18} />
+              {isActive && <span className="active-pill-line"></span>}
             </button>
           );
         })}
       </nav>
-
-      <div className="sidebar-footer">
-        <div className="status-indicator" title="System Status: Operational"></div>
-      </div>
     </aside>
   );
 }
