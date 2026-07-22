@@ -1,16 +1,16 @@
 import React from 'react';
-import { ShieldAlert, Ticket, Users, Settings } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, ShieldAlert, Settings } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const navItems = [
-    { id: 'tickets', icon: Ticket, label: 'Incidents' },
-    { id: 'users', icon: Users, label: 'Requesters' },
+    { id: 'dashboard', icon: LayoutDashboard, label: 'Incident Dashboard' },
+    { id: 'add-incident', icon: PlusCircle, label: 'Report Incident' },
     { id: 'settings', icon: Settings, label: 'Settings' }
   ];
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo">
+      <div className="sidebar-logo" title="SecOps Incident System">
         <div className="logo-icon">
           <ShieldAlert size={20} color="#ffffff" />
         </div>
@@ -27,7 +27,7 @@ export default function Sidebar({ activeTab, setActiveTab }) {
               onClick={() => setActiveTab(item.id)}
               title={item.label}
             >
-              <Icon size={18} />
+              <Icon size={19} />
               {isActive && <span className="active-pill-line"></span>}
             </button>
           );

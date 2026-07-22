@@ -1,25 +1,40 @@
 import React from 'react';
-import { ChevronRight, Plus, User, Layers } from 'lucide-react';
+import { ChevronRight, Clock, ShieldCheck } from 'lucide-react';
 
-export default function SubHeader({ ticket }) {
+export default function SubHeader({ activeTab }) {
+  const getTabLabel = () => {
+    switch (activeTab) {
+      case 'dashboard': return 'Incident Dashboard & Timestamps';
+      case 'add-incident': return 'Log New Incident Form';
+      case 'settings': return 'System Settings';
+      default: return 'Dashboard';
+    }
+  };
+
+  const todayDateStr = new Date().toLocaleDateString('en-US', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
   return (
     <div className="subheader-bar">
       <div className="subheader-left">
-        <span className="breadcrumb-link">Organization</span>
-        <ChevronRight size={13} className="text-gray-400" />
-        <span className="breadcrumb-link">{ticket.customerName}</span>
-        <ChevronRight size={13} className="text-gray-400" />
-        <span className="ticket-status-tag">New</span>
-        <span className="ticket-number">Ticket #{ticket.ticketId}</span>
+        <span className="breadcrumb-link">SecOps Incident Portal</span>
+        <ChevronRight size={13} className="text-gray" />
+        <span className="breadcrumb-current">{getTabLabel()}</span>
       </div>
 
       <div className="subheader-right">
-        <button className="side-conv-btn">
-          <Plus size={13} /> Side conversation
-        </button>
-        <button className="view-toggle-btn active">
-          <User size={14} /> Requester Details
-        </button>
+        <div className="system-time-badge">
+          <Clock size={13} />
+          <span>Current System Date: <strong>{todayDateStr}</strong></span>
+        </div>
+        <div className="system-status-indicator">
+          <ShieldCheck size={13} className="text-green" />
+          <span>Realtime Monitoring Active</span>
+        </div>
       </div>
     </div>
   );
