@@ -3,6 +3,9 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import SubHeader from './components/SubHeader';
 import DashboardView from './components/DashboardView';
+import AnalyticsView from './components/AnalyticsView';
+import WhatsAppBroadcastView from './components/WhatsAppBroadcastView';
+import SettingsView from './components/SettingsView';
 import AddIncidentForm from './components/AddIncidentForm';
 import IncidentDetailModal from './components/IncidentDetailModal';
 import Toast from './components/Toast';
@@ -17,6 +20,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [incidents, setIncidents] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
+  const [waBroadcastIncident, setWaBroadcastIncident] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
   // Load initial incidents from storage or service default
@@ -103,6 +107,11 @@ function App() {
     }
   };
 
+  const handleOpenWhatsAppBroadcast = (incident = null) => {
+    setWaBroadcastIncident(incident);
+    setActiveTab('whatsapp-broadcast');
+  };
+
   return (
     <div className="app-container">
       {/* Toast Alert */}
@@ -134,6 +143,22 @@ function App() {
               onSelectIncident={(inc) => setSelectedIncident(inc)}
               onDeleteIncident={handleDeleteIncident}
               onUpdateStatus={handleUpdateStatus}
+              onOpenWhatsAppBroadcast={handleOpenWhatsAppBroadcast}
+            />
+          )}
+
+          {activeTab === 'analytics' && (
+            <AnalyticsView 
+              incidents={incidents}
+              onToast={(msg) => setToastMessage(msg)}
+            />
+          )}
+
+          {activeTab === 'whatsapp-broadcast' && (
+            <WhatsAppBroadcastView
+              incidents={incidents}
+              initialIncident={waBroadcastIncident}
+              onCopySuccess={(msg) => setToastMessage(msg)}
             />
           )}
 
@@ -146,10 +171,10 @@ function App() {
           )}
 
           {activeTab === 'settings' && (
-            <div className="settings-view-placeholder">
-              <h2>System Settings</h2>
-              <p>Configure notifications, security webhooks, and database connectors.</p>
-            </div>
+            <SettingsView
+              onResetData={(newList) => updateIncidentsList(newList)}
+              onToast={(msg) => setToastMessage(msg)}
+            />
           )}
         </main>
       </div>
@@ -161,6 +186,7 @@ function App() {
           onClose={() => setSelectedIncident(null)}
           onUpdateStatus={handleUpdateStatus}
           onAddTimelineEvent={handleAddTimelineEvent}
+          onOpenWhatsAppBroadcast={handleOpenWhatsAppBroadcast}
         />
       )}
     </div>
@@ -168,3 +194,4 @@ function App() {
 }
 
 export default App;
+

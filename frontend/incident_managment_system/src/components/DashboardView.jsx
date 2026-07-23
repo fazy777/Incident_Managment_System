@@ -11,18 +11,20 @@ import {
   Trash2, 
   Eye, 
   Database,
-  ArrowUpDown,
   RefreshCw,
-  UserCheck
+  UserCheck,
+  MessageSquare,
+  Download
 } from 'lucide-react';
-import { formatRelativeTime } from '../services/incidentService';
+import { formatRelativeTime, exportIncidentsCSV } from '../services/incidentService';
 
 export default function DashboardView({ 
   incidents, 
   onOpenAddModal, 
   onSelectIncident, 
   onDeleteIncident,
-  onUpdateStatus 
+  onUpdateStatus,
+  onOpenWhatsAppBroadcast
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -65,39 +67,29 @@ export default function DashboardView({
     }
   };
 
-  const getStatusBadge = (status) => {
-    switch (status) {
-      case 'Open':
-        return <span className="status-pill status-open">Open</span>;
-      case 'Investigating':
-        return <span className="status-pill status-investigating">Investigating</span>;
-      case 'In Progress':
-      case 'Containing Threat':
-        return <span className="status-pill status-progress">In Progress</span>;
-      case 'Resolved':
-        return <span className="status-pill status-resolved">Resolved</span>;
-      default:
-        return <span className="status-pill">{status}</span>;
-    }
-  };
-
   return (
     <div className="dashboard-container">
       {/* Top Banner Notice */}
       <div className="db-notice-banner">
         <div className="banner-left">
           <Database size={16} className="text-blue" />
-          <span><strong>Incident Log Ready:</strong> Incidents are dynamically recorded with full timestamps. Ready to connect to backend database.</span>
+          <span><strong>Incident Log Ready:</strong> Real-time incident tracking active with automated WhatsApp broadcast tools.</span>
         </div>
-        <button className="btn-add-primary" onClick={onOpenAddModal}>
-          <Plus size={16} />
-          <span>Report Incident</span>
-        </button>
+        <div className="banner-actions">
+          <button className="btn-secondary-sm" onClick={() => exportIncidentsCSV(incidents)}>
+            <Download size={14} />
+            <span>Export CSV</span>
+          </button>
+          <button className="btn-add-primary" onClick={onOpenAddModal}>
+            <Plus size={16} />
+            <span>Report Incident</span>
+          </button>
+        </div>
       </div>
 
       {/* KPI Stats Cards Grid */}
       <div className="stats-cards-grid">
-        <div className="stat-card">
+        <div className="stat-card" onClick={() => { setStatusFilter('All'); setSeverityFilter('All'); }} style={{ cursor: 'pointer' }}>
           <div className="stat-icon-wrapper blue">
             <Activity size={20} />
           </div>
@@ -107,7 +99,7 @@ export default function DashboardView({
           </div>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card" onClick={() => setSeverityFilter('Critical')} style={{ cursor: 'pointer' }}>
           <div className="stat-icon-wrapper red">
             <AlertCircle size={20} />
           </div>
@@ -117,7 +109,7 @@ export default function DashboardView({
           </div>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card" onClick={() => setStatusFilter('In Progress')} style={{ cursor: 'pointer' }}>
           <div className="stat-icon-wrapper amber">
             <RefreshCw size={20} />
           </div>
@@ -127,7 +119,7 @@ export default function DashboardView({
           </div>
         </div>
 
-        <div className="stat-card">
+        <div className="stat-card" onClick={() => setStatusFilter('Resolved')} style={{ cursor: 'pointer' }}>
           <div className="stat-icon-wrapper green">
             <CheckCircle2 size={20} />
           </div>
@@ -279,6 +271,13 @@ export default function DashboardView({
                   <td className="text-right" onClick={(e) => e.stopPropagation()}>
                     <div className="row-actions">
                       <button
+                        className="action-btn-icon wa"
+                        title="WhatsApp Group Alert"
+                        onClick={() => onOpenWhatsAppBroadcast && onOpenWhatsAppBroadcast(inc)}
+                      >
+                        <MessageSquare size={15} />
+                      </button>
+                      <button
                         className="action-btn-icon view"
                         title="View Full Details"
                         onClick={() => onSelectIncident(inc)}
@@ -298,6 +297,7 @@ export default function DashboardView({
               ))
             )}
           </tbody>
+
         </table>
       </div>
     </div>

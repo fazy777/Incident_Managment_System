@@ -5,8 +5,10 @@ import {
   Bell, 
   Database,
   LayoutDashboard,
+  BarChart3,
+  MessageSquare,
   FilePlus,
-  Server
+  Settings
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
@@ -14,7 +16,7 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
     <header className="top-navbar">
       {/* Left: Branding & Tabs */}
       <div className="navbar-brand-section">
-        <div className="app-title-group">
+        <div className="app-title-group" onClick={() => setActiveTab('dashboard')} style={{ cursor: 'pointer' }}>
           <span className="app-name">Incident Command Center</span>
           <span className="app-env-badge">SecOps v2.4</span>
         </div>
@@ -30,11 +32,27 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
           </button>
 
           <button
+            className={`nav-tab-pill ${activeTab === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveTab('analytics')}
+          >
+            <BarChart3 size={14} />
+            <span>Analytics</span>
+          </button>
+
+          <button
+            className={`nav-tab-pill ${activeTab === 'whatsapp-broadcast' ? 'active' : ''}`}
+            onClick={() => setActiveTab('whatsapp-broadcast')}
+          >
+            <MessageSquare size={14} />
+            <span>WhatsApp Broadcast</span>
+          </button>
+
+          <button
             className={`nav-tab-pill ${activeTab === 'add-incident' ? 'active' : ''}`}
             onClick={() => setActiveTab('add-incident')}
           >
             <FilePlus size={14} />
-            <span>+ Add Incident</span>
+            <span>+ Report Incident</span>
           </button>
         </div>
       </div>
@@ -49,6 +67,10 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
         <button className="btn-quick-add" onClick={() => setActiveTab('add-incident')}>
           <Plus size={14} />
           <span>New Incident</span>
+        </button>
+
+        <button className="nav-action-icon" title="System Settings" onClick={() => setActiveTab('settings')}>
+          <Settings size={16} />
         </button>
 
         <button className="nav-action-icon" title="System Notifications">
@@ -66,3 +88,4 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
     </header>
   );
 }
+

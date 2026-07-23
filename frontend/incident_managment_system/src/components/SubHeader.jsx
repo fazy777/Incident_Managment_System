@@ -4,9 +4,11 @@ import { ChevronRight, Clock, ShieldCheck } from 'lucide-react';
 export default function SubHeader({ activeTab }) {
   const getTabLabel = () => {
     switch (activeTab) {
-      case 'dashboard': return 'Incident Dashboard & Timestamps';
+      case 'dashboard': return 'Incident Dashboard & Live Queue';
+      case 'analytics': return 'SecOps Metrics & SLA Analytics';
+      case 'whatsapp-broadcast': return 'WhatsApp Group Broadcast Hub';
       case 'add-incident': return 'Log New Incident Form';
-      case 'settings': return 'System Settings';
+      case 'settings': return 'System Settings & Roster';
       default: return 'Dashboard';
     }
   };

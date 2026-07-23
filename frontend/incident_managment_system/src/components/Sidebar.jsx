@@ -1,16 +1,18 @@
 import React from 'react';
-import { LayoutDashboard, PlusCircle, ShieldAlert, Settings } from 'lucide-react';
+import { LayoutDashboard, BarChart3, MessageSquare, PlusCircle, ShieldAlert, Settings } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Incident Dashboard' },
+    { id: 'analytics', icon: BarChart3, label: 'Analytics & KPIs' },
+    { id: 'whatsapp-broadcast', icon: MessageSquare, label: 'WhatsApp Broadcast Hub' },
     { id: 'add-incident', icon: PlusCircle, label: 'Report Incident' },
-    { id: 'settings', icon: Settings, label: 'Settings' }
+    { id: 'settings', icon: Settings, label: 'System Settings' }
   ];
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-logo" title="SecOps Incident System">
+      <div className="sidebar-logo" title="SecOps Incident System" onClick={() => setActiveTab('dashboard')}>
         <div className="logo-icon">
           <ShieldAlert size={20} color="#ffffff" />
         </div>
@@ -36,3 +38,4 @@ export default function Sidebar({ activeTab, setActiveTab }) {
     </aside>
   );
 }
+
