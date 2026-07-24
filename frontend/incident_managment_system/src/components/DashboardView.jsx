@@ -13,7 +13,6 @@ import {
   Database,
   RefreshCw,
   UserCheck,
-  MessageSquare,
   Download
 } from 'lucide-react';
 import { formatRelativeTime, exportIncidentsCSV } from '../services/incidentService';
@@ -23,8 +22,7 @@ export default function DashboardView({
   onOpenAddModal, 
   onSelectIncident, 
   onDeleteIncident,
-  onUpdateStatus,
-  onOpenWhatsAppBroadcast
+  onUpdateStatus
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
@@ -73,7 +71,7 @@ export default function DashboardView({
       <div className="db-notice-banner">
         <div className="banner-left">
           <Database size={16} className="text-blue" />
-          <span><strong>Incident Log Ready:</strong> Real-time incident tracking active with automated WhatsApp broadcast tools.</span>
+          <span><strong>Incident Log Ready:</strong> Real-time incident tracking and monitoring active.</span>
         </div>
         <div className="banner-actions">
           <button className="btn-secondary-sm" onClick={() => exportIncidentsCSV(incidents)}>
@@ -270,13 +268,6 @@ export default function DashboardView({
                   {/* Actions */}
                   <td className="text-right" onClick={(e) => e.stopPropagation()}>
                     <div className="row-actions">
-                      <button
-                        className="action-btn-icon wa"
-                        title="WhatsApp Group Alert"
-                        onClick={() => onOpenWhatsAppBroadcast && onOpenWhatsAppBroadcast(inc)}
-                      >
-                        <MessageSquare size={15} />
-                      </button>
                       <button
                         className="action-btn-icon view"
                         title="View Full Details"

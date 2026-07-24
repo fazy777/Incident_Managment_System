@@ -1,11 +1,10 @@
 import React from 'react';
-import { LayoutDashboard, BarChart3, MessageSquare, PlusCircle, ShieldAlert, Settings } from 'lucide-react';
+import { LayoutDashboard, BarChart3, PlusCircle, ShieldAlert, Settings } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Incident Dashboard' },
     { id: 'analytics', icon: BarChart3, label: 'Analytics & KPIs' },
-    { id: 'whatsapp-broadcast', icon: MessageSquare, label: 'WhatsApp Broadcast Hub' },
     { id: 'add-incident', icon: PlusCircle, label: 'Report Incident' },
     { id: 'settings', icon: Settings, label: 'System Settings' }
   ];

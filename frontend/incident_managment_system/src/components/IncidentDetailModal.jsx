@@ -7,7 +7,6 @@ import {
   Server, 
   Send, 
   Database,
-  MessageSquare,
   CheckSquare
 } from 'lucide-react';
 import { formatRelativeTime } from '../services/incidentService';
@@ -16,8 +15,7 @@ export default function IncidentDetailModal({
   incident, 
   onClose, 
   onUpdateStatus, 
-  onAddTimelineEvent,
-  onOpenWhatsAppBroadcast 
+  onAddTimelineEvent
 }) {
   const [newEventText, setNewEventText] = useState('');
   const [checklist, setChecklist] = useState([
@@ -63,17 +61,6 @@ export default function IncidentDetailModal({
           </div>
 
           <div className="modal-header-right">
-            <button 
-              className="btn-wa-header" 
-              onClick={() => {
-                onClose();
-                if (onOpenWhatsAppBroadcast) onOpenWhatsAppBroadcast(incident);
-              }}
-              title="Broadcast this incident to WhatsApp Group"
-            >
-              <MessageSquare size={14} />
-              <span>WhatsApp Alert</span>
-            </button>
             <button className="close-btn" onClick={onClose}>
               <X size={18} />
             </button>

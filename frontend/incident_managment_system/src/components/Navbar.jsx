@@ -6,7 +6,6 @@ import {
   Database,
   LayoutDashboard,
   BarChart3,
-  MessageSquare,
   FilePlus,
   Settings
 } from 'lucide-react';
@@ -37,14 +36,6 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
           >
             <BarChart3 size={14} />
             <span>Analytics</span>
-          </button>
-
-          <button
-            className={`nav-tab-pill ${activeTab === 'whatsapp-broadcast' ? 'active' : ''}`}
-            onClick={() => setActiveTab('whatsapp-broadcast')}
-          >
-            <MessageSquare size={14} />
-            <span>WhatsApp Broadcast</span>
           </button>
 
           <button

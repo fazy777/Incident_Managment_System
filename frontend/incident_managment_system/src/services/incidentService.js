@@ -184,67 +184,6 @@ export const formatRelativeTime = (isoString) => {
   return `${days} day${days > 1 ? 's' : ''} ago`;
 };
 
-// WhatsApp Message Format Generator
-export const generateWhatsAppMessage = (type, data) => {
-  const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
-
-  if (type === 'single' && data) {
-    const inc = data;
-    const sevEmoji = inc.severity === 'Critical' ? '🚨' : inc.severity === 'High' ? '⚠️' : inc.severity === 'Medium' ? '🟡' : '🟢';
-    return `${sevEmoji} *INCIDENT RESPONSE ALERT: ${inc.id}* ${sevEmoji}\n\n` +
-      `📌 *Title:* ${inc.title}\n` +
-      `⚡ *Severity:* ${inc.severity.toUpperCase()}\n` +
-      `🔄 *Status:* ${inc.status}\n` +
-      `🏷️ *Category:* ${inc.category}\n` +
-      `💻 *Affected System:* ${inc.systemComponent || 'N/A'}\n` +
-      `👤 *Assigned To:* ${inc.assignee || 'Unassigned'}\n` +
-      `🕒 *Reported:* ${inc.displayTime || inc.timestamp}\n\n` +
-      `📝 *Details:* ${inc.description}\n\n` +
-      `--- \n` +
-      `*SecOps Incident Command Center* • ${timeNow}`;
-  }
-
-  if (type === 'shift_handover') {
-    const incidents = Array.isArray(data) ? data : [];
-    const total = incidents.length;
-    const critical = incidents.filter(i => i.severity === 'Critical' || i.severity === 'High');
-    const openActive = incidents.filter(i => i.status !== 'Resolved');
-    const resolved = incidents.filter(i => i.status === 'Resolved');
-
-    let activeListStr = openActive.length > 0 
-      ? openActive.map((inc, index) => `${index + 1}. [${inc.id}] *${inc.title}* (${inc.severity}) - *${inc.status}* | Assigned: ${inc.assignee}`).join('\n')
-      : '• No active critical issues.';
-
-    return `📢 *SECOPS SHIFT HANDOVER & INCIDENT BRIEFING* 📢\n` +
-      `📅 *Date:* ${timeNow}\n\n` +
-      `📊 *SYSTEM SUMMARY:* \n` +
-      `• Total Logged Incidents: ${total}\n` +
-      `• Active Investigations: ${openActive.length}\n` +
-      `• Critical/High Priority: ${critical.length}\n` +
-      `• Resolved Today: ${resolved.length}\n\n` +
-      `🔥 *ACTIVE INCIDENTS:* \n${activeListStr}\n\n` +
-      `👉 *Action Required:* Shift leads please review active tickets and verify mitigation steps.\n` +
-      `--- \n` +
-      `*SecOps Incident Response System*`;
-  }
-
-  if (type === 'critical_alert') {
-    const incidents = Array.isArray(data) ? data : [];
-    const criticals = incidents.filter(i => (i.severity === 'Critical' || i.severity === 'High') && i.status !== 'Resolved');
-
-    let list = criticals.map(i => `🚨 *${i.id}*: ${i.title}\n  ↳ System: ${i.systemComponent} | Assignee: ${i.assignee}`).join('\n\n');
-
-    return `🚨 *CRITICAL THREAT ALERT TO ALL HANDS* 🚨\n\n` +
-      `The following high-priority incident(s) require immediate containment:\n\n` +
-      `${list || 'No active critical incidents.'}\n\n` +
-      `⚠️ *Instructed Action:* Please check SecOps Command Center immediately.\n` +
-      `--- \n` +
-      `*Emergency Broadcast Channel* • ${timeNow}`;
-  }
-
-  return '';
-};
-
 // CSV Export Utility
 export const exportIncidentsCSV = (incidents) => {
   const headers = ['ID', 'Title', 'Category', 'Severity', 'Status', 'Reporter', 'Assignee', 'System Component', 'Timestamp', 'Description'];

@@ -5,14 +5,12 @@ import {
   Bell, 
   Database, 
   ShieldCheck, 
-  MessageSquare, 
   Plus, 
   Trash2, 
   RotateCcw, 
   Save, 
   CheckCircle2,
-  Lock,
-  Smartphone
+  Lock
 } from 'lucide-react';
 import { resetToInitialIncidents } from '../services/incidentService';
 
@@ -25,11 +23,9 @@ export default function SettingsView({ onResetData, onToast }) {
   ]);
 
   const [newMember, setNewMember] = useState({ name: '', role: 'SOC Analyst', email: '' });
-  const [webhookUrl, setWebhookUrl] = useState('https://api.whatsapp.com/v1/webhooks/secops-group-alerts');
   const [slackWebhook, setSlackWebhook] = useState('https://hooks.slack.com/services/T00/B00/XXXXX');
   const [notifications, setNotifications] = useState({
     criticalSms: true,
-    whatsappGroupBroadcast: true,
     emailDailyDigest: true,
     soundAlerts: false
   });
@@ -78,7 +74,7 @@ export default function SettingsView({ onResetData, onToast }) {
           </div>
           <div>
             <h2>SecOps System & Broadcast Settings</h2>
-            <p>Configure team roster, WhatsApp & Slack webhooks, and incident database connectors.</p>
+            <p>Configure team roster, Slack webhooks, and incident database connectors.</p>
           </div>
         </div>
 
@@ -162,25 +158,14 @@ export default function SettingsView({ onResetData, onToast }) {
           </form>
         </div>
 
-        {/* Webhook & WhatsApp Integration */}
+        {/* Webhook & Integration */}
         <div className="settings-card">
           <h3 className="settings-card-title">
-            <Smartphone size={18} className="text-green" />
-            WhatsApp & Alert Webhook Endpoints
+            <Bell size={18} className="text-green" />
+            Alert Webhook Endpoints
           </h3>
 
           <div className="setting-field">
-            <label>WhatsApp Group API Webhook Endpoint URL:</label>
-            <input
-              type="text"
-              className="text-input"
-              value={webhookUrl}
-              onChange={(e) => setWebhookUrl(e.target.value)}
-            />
-            <span className="field-hint">Automated alerts will post directly to your configured WhatsApp emergency channel.</span>
-          </div>
-
-          <div className="setting-field mt-4">
             <label>Slack Alert Channel Webhook:</label>
             <input
               type="text"
@@ -188,6 +173,7 @@ export default function SettingsView({ onResetData, onToast }) {
               value={slackWebhook}
               onChange={(e) => setSlackWebhook(e.target.value)}
             />
+            <span className="field-hint">Automated emergency alerts will post directly to your configured Slack channel.</span>
           </div>
         </div>
 
@@ -199,18 +185,6 @@ export default function SettingsView({ onResetData, onToast }) {
           </h3>
 
           <div className="toggle-list">
-            <label className="toggle-item">
-              <div>
-                <strong>WhatsApp Group Auto-Broadcast</strong>
-                <span>Post alerts to group when Critical incident is logged</span>
-              </div>
-              <input
-                type="checkbox"
-                checked={notifications.whatsappGroupBroadcast}
-                onChange={(e) => setNotifications({ ...notifications, whatsappGroupBroadcast: e.target.checked })}
-              />
-            </label>
-
             <label className="toggle-item">
               <div>
                 <strong>Critical Priority Emergency SMS</strong>
