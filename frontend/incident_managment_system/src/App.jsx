@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import SubHeader from './components/SubHeader';
 import DashboardView from './components/DashboardView';
 import AnalyticsView from './components/AnalyticsView';
+import OnCallView from './components/OnCallView';
 import SettingsView from './components/SettingsView';
 import AddIncidentForm from './components/AddIncidentForm';
 import IncidentDetailModal from './components/IncidentDetailModal';
@@ -142,6 +143,12 @@ function App() {
           {activeTab === 'analytics' && (
             <AnalyticsView 
               incidents={incidents}
+              onToast={(msg) => setToastMessage(msg)}
+            />
+          )}
+
+          {activeTab === 'on-call' && (
+            <OnCallView 
               onToast={(msg) => setToastMessage(msg)}
             />
           )}

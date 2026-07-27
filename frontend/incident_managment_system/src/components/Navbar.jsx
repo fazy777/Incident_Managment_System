@@ -6,6 +6,7 @@ import {
   Database,
   LayoutDashboard,
   BarChart3,
+  UserCheck,
   FilePlus,
   Settings
 } from 'lucide-react';
@@ -36,6 +37,14 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
           >
             <BarChart3 size={14} />
             <span>Analytics</span>
+          </button>
+
+          <button
+            className={`nav-tab-pill ${activeTab === 'on-call' ? 'active' : ''}`}
+            onClick={() => setActiveTab('on-call')}
+          >
+            <UserCheck size={14} />
+            <span>On-Call Roster</span>
           </button>
 
           <button

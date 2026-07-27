@@ -1,10 +1,11 @@
 import React from 'react';
-import { LayoutDashboard, BarChart3, PlusCircle, ShieldAlert, Settings } from 'lucide-react';
+import { LayoutDashboard, BarChart3, PlusCircle, UserCheck, Settings, ShieldAlert } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {
   const navItems = [
     { id: 'dashboard', icon: LayoutDashboard, label: 'Incident Dashboard' },
     { id: 'analytics', icon: BarChart3, label: 'Analytics & KPIs' },
+    { id: 'on-call', icon: UserCheck, label: 'On-Call Roster' },
     { id: 'add-incident', icon: PlusCircle, label: 'Report Incident' },
     { id: 'settings', icon: Settings, label: 'System Settings' }
   ];

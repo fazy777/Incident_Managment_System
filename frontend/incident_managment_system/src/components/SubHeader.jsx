@@ -6,6 +6,7 @@ export default function SubHeader({ activeTab }) {
     switch (activeTab) {
       case 'dashboard': return 'Incident Dashboard & Live Queue';
       case 'analytics': return 'SecOps Metrics & SLA Analytics';
+      case 'on-call': return 'On-Call Duty Roster & Escalation Matrix';
       case 'add-incident': return 'Log New Incident Form';
       case 'settings': return 'System Settings & Roster';
       default: return 'Dashboard';
