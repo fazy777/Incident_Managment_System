@@ -1329,3 +1329,65 @@ body {
   background-color: #fef2f2;
 }
 
+/* Activity Logs View Styles */
+.activity-logs-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  animation: fadeIn 0.2s ease-in;
+}
+
+.audit-header-banner {
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  border-radius: 12px;
+  padding: 20px 24px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+}
+
+.audit-header-banner .banner-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.audit-icon-wrapper {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: rgba(2, 132, 199, 0.15);
+  border: 1px solid rgba(2, 132, 199, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audit-header-banner h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.audit-header-banner p {
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+.banner-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.audit-detail-text {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.4;
+  max-width: 420px;
+}
+
+

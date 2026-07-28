@@ -8,7 +8,8 @@ import {
   BarChart3,
   UserCheck,
   FilePlus,
-  Settings
+  Settings,
+  History
 } from 'lucide-react';
 
 export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
@@ -45,6 +46,14 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
           >
             <UserCheck size={14} />
             <span>On-Call Roster</span>
+          </button>
+
+          <button
+            className={`nav-tab-pill ${activeTab === 'audit-logs' ? 'active' : ''}`}
+            onClick={() => setActiveTab('audit-logs')}
+          >
+            <History size={14} />
+            <span>Audit Logs</span>
           </button>
 
           <button
