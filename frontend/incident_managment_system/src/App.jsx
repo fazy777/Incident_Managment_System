@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import SubHeader from './components/SubHeader';
 import DashboardView from './components/DashboardView';
+import SystemStatusView from './components/SystemStatusView';
 import AnalyticsView from './components/AnalyticsView';
 import OnCallView from './components/OnCallView';
 import ActivityLogView from './components/ActivityLogView';
@@ -26,6 +27,7 @@ function App() {
   const [incidents, setIncidents] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
+  const [draftIncidentData, setDraftIncidentData] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
   // Load initial incidents and audit logs from storage
@@ -60,7 +62,14 @@ function App() {
     setAuditLogs(updatedLogs);
 
     setToastMessage(`Incident ${newInc.id} logged successfully with timestamp!`);
+    setDraftIncidentData(null);
     setActiveTab('dashboard');
+  };
+
+  // Trigger Report Outage from System Status view
+  const handleReportOutage = (outageData) => {
+    setDraftIncidentData(outageData);
+    setActiveTab('add-incident');
   };
 
   // Update Status handler
@@ -176,10 +185,20 @@ function App() {
           {activeTab === 'dashboard' && (
             <DashboardView
               incidents={incidents}
-              onOpenAddModal={() => setActiveTab('add-incident')}
+              onOpenAddModal={() => {
+                setDraftIncidentData(null);
+                setActiveTab('add-incident');
+              }}
               onSelectIncident={(inc) => setSelectedIncident(inc)}
               onDeleteIncident={handleDeleteIncident}
               onUpdateStatus={handleUpdateStatus}
+            />
+          )}
+
+          {activeTab === 'system-status' && (
+            <SystemStatusView
+              onReportOutage={handleReportOutage}
+              onToast={(msg) => setToastMessage(msg)}
             />
           )}
 
@@ -206,9 +225,16 @@ function App() {
 
           {activeTab === 'add-incident' && (
             <AddIncidentForm
+              initialData={draftIncidentData}
               onAddIncident={handleAddIncident}
-              onCancel={() => setActiveTab('dashboard')}
-              onClose={() => setActiveTab('dashboard')}
+              onCancel={() => {
+                setDraftIncidentData(null);
+                setActiveTab('dashboard');
+              }}
+              onClose={() => {
+                setDraftIncidentData(null);
+                setActiveTab('dashboard');
+              }}
             />
           )}
 

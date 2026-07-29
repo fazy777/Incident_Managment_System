@@ -5,6 +5,7 @@ export default function SubHeader({ activeTab }) {
   const getTabLabel = () => {
     switch (activeTab) {
       case 'dashboard': return 'Incident Dashboard & Live Queue';
+      case 'system-status': return 'Infrastructure Health & Microservices Monitor';
       case 'analytics': return 'SecOps Metrics & SLA Analytics';
       case 'on-call': return 'On-Call Duty Roster & Escalation Matrix';
       case 'audit-logs': return 'System Activity Audit Trail & Compliance Logs';

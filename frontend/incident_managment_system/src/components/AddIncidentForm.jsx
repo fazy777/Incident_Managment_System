@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ShieldAlert, 
   AlertTriangle, 
@@ -13,7 +13,7 @@ import {
   Info
 } from 'lucide-react';
 
-export default function AddIncidentForm({ onAddIncident, onClose, onCancel }) {
+export default function AddIncidentForm({ initialData, onAddIncident, onClose, onCancel }) {
   const [formData, setFormData] = useState({
     title: '',
     category: 'Security Breach',
@@ -25,6 +25,15 @@ export default function AddIncidentForm({ onAddIncident, onClose, onCancel }) {
     systemComponent: '',
     description: ''
   });
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData((prev) => ({
+        ...prev,
+        ...initialData
+      }));
+    }
+  }, [initialData]);
 
   const [errorMsg, setErrorMsg] = useState('');
   const currentTimeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });
@@ -47,16 +56,6 @@ export default function AddIncidentForm({ onAddIncident, onClose, onCancel }) {
     }
 
     onAddIncident(formData);
-  };
-
-  const getSeverityBadgeClass = (sev) => {
-    switch (sev) {
-      case 'Critical': return 'sev-critical';
-      case 'High': return 'sev-high';
-      case 'Medium': return 'sev-medium';
-      case 'Low': return 'sev-low';
-      default: return 'sev-medium';
-    }
   };
 
   return (
@@ -248,7 +247,7 @@ export default function AddIncidentForm({ onAddIncident, onClose, onCancel }) {
             </div>
             <div className="timestamp-value">{currentTimeString}</div>
             <p className="timestamp-note">
-              <Info size={11} inline /> Timestamp will be permanently attached to this incident log.
+              <Info size={11} /> Timestamp will be permanently attached to this incident log.
             </p>
           </div>
         </div>

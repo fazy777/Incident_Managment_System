@@ -59,8 +59,10 @@ Developed under the **Zynvex Solutions Internship Program**, this system bridges
 
 ### 🌐 1. Real-Time Web Dashboard (React)
 - **Live Monitoring**: Interactive dashboard presenting real-time status of critical, major, and minor technical incidents.
-- **Incident Reporting**: Clean, user-friendly forms to capture system outages, bugs, and infrastructure requests.
-- **Role-Based Access Control (RBAC)**: Secure authentication and custom access permissions for engineers and managers.
+- **Infrastructure & Microservice Status Monitor**: Live node health monitor tracking CPU, memory, latency (ms), and uptime across microservices (Auth, PostgreSQL, Kafka, Payment Gateway, S3 Vault, Elasticsearch).
+- **Interactive Incident Response Playbooks**: Category-tailored SOP resolution checklists (Security Breach, Database, Infrastructure, API Gateway) with interactive step execution that auto-logs to audit history.
+- **SLA Breach Countdown Engine**: Real-time SLA tracking per severity (Critical 30m, High 2h, Medium 8h, Low 24h) with visual SLA SAFE / WARNING / BREACHED telemetry badges.
+- **Incident Reporting & Auto-Drafting**: Clean forms to capture outages directly from infrastructure alerts with automatic timestamping.
 
 ### 💻 2. Desktop Administration Client (JavaFX)
 - **Advanced Escalations**: High-priority incident queue management and swift status escalation.
@@ -69,7 +71,7 @@ Developed under the **Zynvex Solutions Internship Program**, this system bridges
 
 ### ⚡ 3. Enterprise Backend & Storage (Java Spring Boot & SQL)
 - **ACID Compliance**: Ensures data consistency and transaction reliability for critical issue logs and audit trails.
-- **RESTful API**: Standardized endpoints for seamless synchronization between Web, Desktop client, and Database.
+- **RESTful APIs**: Spring Boot controllers (`IncidentController`, `SystemHealthController`) exposing REST endpoints for CRUD operations and node telemetry.
 - **High Volume Logging**: Optimized schema and indexing to support large-scale enterprise log volumes.
 
 ---
@@ -78,11 +80,11 @@ Developed under the **Zynvex Solutions Internship Program**, this system bridges
 
 | Layer | Technologies Used |
 | :--- | :--- |
-| **Web Frontend** | React, JSX, Modern CSS3 / Glassmorphism UI |
+| **Web Frontend** | React 19, JSX, Modern CSS3 / Glassmorphism UI, Lucide Icons |
 | **Desktop Client** | JavaFX, SceneBuilder, OpenJFX |
-| **Backend Framework** | Java / Spring Boot, REST APIs |
+| **Backend Framework** | Java 17 / Spring Boot, REST APIs |
 | **Database** | SQL (MySQL / PostgreSQL), Hibernate ORM |
-| **Build & Tooling** | Maven, Git, GitHub Actions |
+| **Build & Tooling** | Maven, Vite, Git, GitHub Actions |
 
 ---
 
@@ -90,15 +92,17 @@ Developed under the **Zynvex Solutions Internship Program**, this system bridges
 
 > **Submission Timeline**: July 20, 2026 – August 15, 2026
 
-- [ ] **Module 1: Foundation & Authentication** *(July 20 – July 26, 2026)*
-  - [ ] Relational SQL Database Schema Design
-  - [ ] React Web Frontend Application Structure Initialization
-  - [ ] User Authentication & Access Control Module
+- [x] **Module 1: Foundation & Authentication** *(July 20 – July 26, 2026)*
+  - [x] Relational SQL Database Schema Design & Models
+  - [x] React Web Frontend Application Structure Initialization
+  - [x] User Authentication & Access Control Module
 
-- [ ] **Module 2: Web Dashboard & CRUD Services** *(July 27 – August 02, 2026)*
-  - [ ] Incident Logging and Reporting Forms in React
-  - [ ] Spring Boot Backend API Integration for CRUD Operations
-  - [ ] Status Filters and Real-time Incident List Views
+- [x] **Module 2: Web Dashboard & CRUD Services** *(July 27 – August 02, 2026)*
+  - [x] Incident Logging and Reporting Forms in React
+  - [x] Infrastructure Health Telemetry Monitor & Outage Auto-Drafting
+  - [x] Spring Boot Backend API Integration for CRUD Operations & Controllers
+  - [x] Status Filters, SLA Breach Tracking & Real-time Incident List Views
+  - [x] Interactive SOP Playbooks & Audit Activity Logging Engine
 
 - [ ] **Module 3: JavaFX Desktop Client & Analytics** *(August 03 – August 09, 2026)*
   - [ ] Development of JavaFX Admin Desktop Interface

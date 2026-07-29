@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, 
   Clock, 
@@ -7,7 +7,10 @@ import {
   Server, 
   Send, 
   Database,
-  CheckSquare
+  CheckSquare,
+  AlertTriangle,
+  Play,
+  CheckCircle2
 } from 'lucide-react';
 import { formatRelativeTime } from '../services/incidentService';
 
@@ -18,17 +21,104 @@ export default function IncidentDetailModal({
   onAddTimelineEvent
 }) {
   const [newEventText, setNewEventText] = useState('');
-  const [checklist, setChecklist] = useState([
-    { id: 1, text: 'Isolate affected node & dump memory logs', done: true },
-    { id: 2, text: 'Notify On-Call SecOps Commander & Group', done: true },
-    { id: 3, text: 'Apply immediate threat containment patch', done: false },
-    { id: 4, text: 'Verify system recovery & run sanity test', done: false }
-  ]);
+  
+  // Categorized Playbook Templates
+  const getPlaybookForCategory = (cat) => {
+    switch (cat) {
+      case 'Security Breach':
+        return [
+          { id: 1, text: 'Isolate compromised host & revoke token secrets', done: true },
+          { id: 2, text: 'Notify On-Call CISO & Security Incident Response Team', done: true },
+          { id: 3, text: 'Audit recent access logs for IP pattern anomalies', done: false },
+          { id: 4, text: 'Deploy hardened credentials and run exploit patch', done: false }
+        ];
+      case 'Database':
+        return [
+          { id: 1, text: 'Analyze active connection pool locks & long queries', done: true },
+          { id: 2, text: 'Failover traffic to standby Read Replica', done: false },
+          { id: 3, text: 'Flush cache buffers and run DB index optimization', done: false },
+          { id: 4, text: 'Verify data replication integrity', done: false }
+        ];
+      case 'Infrastructure':
+      case 'API Gateway':
+        return [
+          { id: 1, text: 'Check CPU/Memory utilization across Kubernetes cluster', done: true },
+          { id: 2, text: 'Scale pod replicas +20% to absorb traffic spike', done: false },
+          { id: 3, text: 'Purge edge CDN cache & re-route gateway DNS', done: false },
+          { id: 4, text: 'Run synthetic API ping test', done: false }
+        ];
+      default:
+        return [
+          { id: 1, text: 'Verify severity impact & notify service owner', done: true },
+          { id: 2, text: 'Capture diagnostic heap dumps & system logs', done: true },
+          { id: 3, text: 'Apply hotfix patch or rollback to previous build', done: false },
+          { id: 4, text: 'Conduct post-incident verification check', done: false }
+        ];
+    }
+  };
+
+  const [checklist, setChecklist] = useState([]);
+
+  useEffect(() => {
+    if (incident) {
+      setChecklist(getPlaybookForCategory(incident.category));
+    }
+  }, [incident]);
 
   if (!incident) return null;
 
+  // SLA Calculation
+  const getSlaHours = (severity) => {
+    switch (severity) {
+      case 'Critical': return 0.5; // 30 mins
+      case 'High': return 2;       // 2 hours
+      case 'Medium': return 8;     // 8 hours
+      case 'Low': return 24;       // 24 hours
+      default: return 4;
+    }
+  };
+
+  const calculateSlaStatus = () => {
+    const createdDate = new Date(incident.timestamp || Date.now());
+    const slaHours = getSlaHours(incident.severity);
+    const deadline = new Date(createdDate.getTime() + slaHours * 60 * 60 * 1000);
+    const now = new Date();
+
+    const diffMinutes = Math.round((deadline - now) / (1000 * 60));
+
+    if (incident.status === 'Resolved') {
+      return { label: 'SLA MET', class: 'bg-green', diffText: 'Resolved within SLA' };
+    }
+    if (diffMinutes < 0) {
+      return { label: 'SLA BREACHED', class: 'bg-red', diffText: `${Math.abs(diffMinutes)}m overdue` };
+    }
+    if (diffMinutes <= 30) {
+      return { label: 'SLA WARNING', class: 'bg-yellow', diffText: `${diffMinutes}m remaining` };
+    }
+    return { label: 'SLA SAFE', class: 'bg-blue', diffText: `${Math.round(diffMinutes / 60)}h ${diffMinutes % 60}m remaining` };
+  };
+
+  const slaInfo = calculateSlaStatus();
+
   const toggleChecklist = (id) => {
-    setChecklist(checklist.map(item => item.id === id ? { ...item, done: !item.done } : item));
+    const updated = checklist.map(item => {
+      if (item.id === id) {
+        const nextState = !item.done;
+        // Automatically add timeline note if step checked
+        if (nextState) {
+          const formattedTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          onAddTimelineEvent(incident.id, {
+            id: Date.now(),
+            type: 'playbook_step',
+            content: `Playbook Step Executed: "${item.text}"`,
+            timestamp: formattedTime
+          });
+        }
+        return { ...item, done: nextState };
+      }
+      return item;
+    });
+    setChecklist(updated);
   };
 
   const handleAddEvent = (e) => {
@@ -57,6 +147,10 @@ export default function IncidentDetailModal({
             <span className="category-chip">{incident.category}</span>
             <span className={`severity-tag ${incident.severity.toLowerCase()}`}>
               {incident.severity} Priority
+            </span>
+            <span className={`sla-badge ${slaInfo.class}`}>
+              <Clock size={12} style={{ display: 'inline', marginRight: '4px' }} />
+              {slaInfo.label} ({slaInfo.diffText})
             </span>
           </div>
 
@@ -129,9 +223,14 @@ export default function IncidentDetailModal({
 
         {/* SOP Response Playbook Checklist */}
         <div className="detail-section">
-          <h4 className="detail-section-heading">
-            <CheckSquare size={14} className="text-blue" />
-            Standard Response Playbook & Checklist
+          <h4 className="detail-section-heading" style={{ justifyContent: 'space-between' }}>
+            <span>
+              <CheckSquare size={14} className="text-blue" style={{ marginRight: '6px', display: 'inline' }} />
+              SOP Incident Playbook ({incident.category})
+            </span>
+            <span style={{ fontSize: '0.75rem', color: '#94a3b8', fontWeight: 'normal' }}>
+              Check step to record execution in audit trail
+            </span>
           </h4>
           <div className="playbook-checklist">
             {checklist.map(item => (
@@ -191,4 +290,3 @@ export default function IncidentDetailModal({
     </div>
   );
 }
-
