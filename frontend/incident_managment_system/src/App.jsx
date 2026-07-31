@@ -10,6 +10,7 @@ import ActivityLogView from './components/ActivityLogView';
 import SettingsView from './components/SettingsView';
 import AddIncidentForm from './components/AddIncidentForm';
 import IncidentDetailModal from './components/IncidentDetailModal';
+import AuthPage from './components/AuthPage';
 import Toast from './components/Toast';
 import { 
   getIncidents, 
@@ -20,15 +21,31 @@ import {
   getAuditLogs,
   addAuditLog
 } from './services/auditLogService';
+import { 
+  subscribeToAuthChanges, 
+  logoutUser 
+} from './services/authService';
 import './App.css';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(false);
+
   const [activeTab, setActiveTab] = useState('dashboard');
   const [incidents, setIncidents] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [draftIncidentData, setDraftIncidentData] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
+
+  // Subscribe to Authentication state changes
+  useEffect(() => {
+    const unsubscribe = subscribeToAuthChanges((user) => {
+      setCurrentUser(user);
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Load initial incidents and audit logs from storage
   useEffect(() => {
@@ -38,6 +55,16 @@ function App() {
     const loadedLogs = getAuditLogs();
     setAuditLogs(loadedLogs);
   }, []);
+
+  // Logout handler
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      setToastMessage('Signed out of Firebase session.');
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
+  };
 
   // Save incidents whenever list changes
   const updateIncidentsList = (newList) => {
@@ -56,7 +83,7 @@ function App() {
       category: newInc.category || 'Security Breach',
       severity: newInc.severity || 'High',
       action: `Incident Logged: ${newInc.id}`,
-      performer: newInc.reporterName || 'SecOps Operator',
+      performer: currentUser?.displayName || newInc.reporterName || 'SecOps Operator',
       details: `New incident "${newInc.title}" registered for component ${newInc.systemComponent}.`
     });
     setAuditLogs(updatedLogs);
@@ -108,7 +135,7 @@ function App() {
       category: 'Status Update',
       severity: newStatus === 'Resolved' ? 'Info' : 'Medium',
       action: `Status Change: ${incidentId}`,
-      performer: 'SecOps Analyst',
+      performer: currentUser?.displayName || 'SecOps Analyst',
       details: `Incident ${incidentId} (${updatedIncTitle}) status escalated/updated to "${newStatus}".`
     });
     setAuditLogs(updatedLogs);
@@ -146,7 +173,7 @@ function App() {
         category: 'Configuration',
         severity: 'High',
         action: `Incident Deleted: ${incidentId}`,
-        performer: 'SecOps Lead',
+        performer: currentUser?.displayName || 'SecOps Lead',
         details: `Incident record ${incidentId} ("${targetInc ? targetInc.title : ''}") was permanently removed from active queue.`
       });
       setAuditLogs(updatedLogs);
@@ -157,6 +184,27 @@ function App() {
       }
     }
   };
+
+  // If Firebase Auth session is loading, show loading screen
+  if (authLoading) {
+    return (
+      <div className="auth-page-container">
+        <div className="auth-spinner" style={{ width: '40px', height: '40px' }}></div>
+      </div>
+    );
+  }
+
+  // If not logged in into Firebase Auth, render Login & Registration Page
+  if (!currentUser) {
+    return (
+      <AuthPage 
+        onAuthSuccess={(user) => {
+          setCurrentUser(user);
+          setToastMessage(`Authenticated as ${user.displayName || user.email}`);
+        }} 
+      />
+    );
+  }
 
   return (
     <div className="app-container">
@@ -175,6 +223,8 @@ function App() {
           activeTab={activeTab} 
           setActiveTab={setActiveTab}
           incidentCount={incidents.length}
+          currentUser={currentUser}
+          onLogout={handleLogout}
         />
 
         {/* Sub Header Breadcrumbs & Date */}

@@ -9,10 +9,16 @@ import {
   UserCheck,
   FilePlus,
   Settings,
-  History
+  History,
+  LogOut,
+  User
 } from 'lucide-react';
+import { getUserRole } from '../services/authService';
 
-export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
+export default function Navbar({ activeTab, setActiveTab, incidentCount, currentUser, onLogout }) {
+  const userRole = currentUser ? getUserRole(currentUser.email) : "SecOps Analyst";
+  const userDisplayName = currentUser?.displayName || currentUser?.email?.split('@')[0] || "SecOps Agent";
+
   return (
     <header className="top-navbar">
       {/* Left: Branding & Tabs */}
@@ -66,11 +72,11 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
         </div>
       </div>
 
-      {/* Right: DB readiness & User Controls */}
+      {/* Right: User Controls & Logout */}
       <div className="navbar-right">
-        <div className="db-status-chip" title="State stored in local storage, ready for SQL / NoSQL database binding">
+        <div className="db-status-chip" title="System Authentication Active">
           <Database size={13} className="text-green" />
-          <span>DB Status: Ready</span>
+          <span>SecOps Auth</span>
         </div>
 
         <button className="btn-quick-add" onClick={() => setActiveTab('add-incident')}>
@@ -86,15 +92,32 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount }) {
           <Bell size={16} />
         </button>
 
-        <div className="user-avatar-wrapper" title="SecOps Admin Analyst">
-          <img
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=120&q=80"
-            alt="Agent Profile"
-          />
-          <span className="status-dot"></span>
+        {/* User Card */}
+        <div className="navbar-user-card" title={`Logged in as ${currentUser?.email}`}>
+          <div className="user-avatar-wrapper">
+            <img
+              src={`https://api.dicebear.com/7.x/bottts/svg?seed=${currentUser?.email || 'SecOps'}`}
+              alt="Agent Avatar"
+            />
+            <span className="status-dot"></span>
+          </div>
+          <div className="user-info-text">
+            <span className="user-display-name">{userDisplayName}</span>
+            <span className="user-display-role">{userRole}</span>
+          </div>
         </div>
+
+        {/* Logout Button */}
+        {onLogout && (
+          <button className="btn-nav-logout" onClick={onLogout} title="Sign Out of Session">
+            <LogOut size={14} />
+            <span>Sign Out</span>
+          </button>
+        )}
       </div>
     </header>
   );
 }
+
+
 
