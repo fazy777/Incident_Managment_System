@@ -13,9 +13,11 @@ import {
   Database,
   RefreshCw,
   UserCheck,
-  Download
+  Download,
+  FileJson,
+  XCircle
 } from 'lucide-react';
-import { formatRelativeTime, exportIncidentsCSV } from '../services/incidentService';
+import { formatRelativeTime, exportIncidentsCSV, exportIncidentsJSON } from '../services/incidentService';
 
 export default function DashboardView({ 
   incidents, 
@@ -74,9 +76,13 @@ export default function DashboardView({
           <span><strong>Incident Log Ready:</strong> Real-time incident tracking and monitoring active.</span>
         </div>
         <div className="banner-actions">
-          <button className="btn-secondary-sm" onClick={() => exportIncidentsCSV(incidents)}>
+          <button className="btn-secondary-sm" onClick={() => exportIncidentsCSV(filteredIncidents.length > 0 ? filteredIncidents : incidents)} title="Export incidents to CSV file">
             <Download size={14} />
             <span>Export CSV</span>
+          </button>
+          <button className="btn-secondary-sm" onClick={() => exportIncidentsJSON(filteredIncidents.length > 0 ? filteredIncidents : incidents)} title="Export incidents to JSON backup file">
+            <FileJson size={14} />
+            <span>Export JSON</span>
           </button>
           <button className="btn-add-primary" onClick={onOpenAddModal}>
             <Plus size={16} />
@@ -87,7 +93,7 @@ export default function DashboardView({
 
       {/* KPI Stats Cards Grid */}
       <div className="stats-cards-grid">
-        <div className="stat-card" onClick={() => { setStatusFilter('All'); setSeverityFilter('All'); }} style={{ cursor: 'pointer' }}>
+        <div className="stat-card" onClick={() => { setSearchTerm(''); setStatusFilter('All'); setSeverityFilter('All'); setCategoryFilter('All'); }} style={{ cursor: 'pointer' }}>
           <div className="stat-icon-wrapper blue">
             <Activity size={20} />
           </div>
@@ -173,8 +179,30 @@ export default function DashboardView({
               <option value="Software Bug">Software Bug</option>
             </select>
           </div>
+
+          {(searchTerm || statusFilter !== 'All' || severityFilter !== 'All' || categoryFilter !== 'All') && (
+            <button 
+              className="btn-clear-filters"
+              onClick={() => {
+                setSearchTerm('');
+                setStatusFilter('All');
+                setSeverityFilter('All');
+                setCategoryFilter('All');
+              }}
+              title="Reset all search and filter criteria"
+            >
+              <XCircle size={14} />
+              <span>Clear Filters</span>
+            </button>
+          )}
         </div>
       </div>
+
+      {(searchTerm || statusFilter !== 'All' || severityFilter !== 'All' || categoryFilter !== 'All') && (
+        <div className="filter-results-badge">
+          Showing <strong>{filteredIncidents.length}</strong> of <strong>{incidents.length}</strong> incidents matching active filters
+        </div>
+      )}
 
       {/* Main Incident Table */}
       <div className="table-responsive-wrapper">
