@@ -222,8 +222,92 @@ export const exportIncidentsJSON = (incidents) => {
   downloadAnchor.remove();
 };
 
+// Executive Summary Printable PDF/HTML Report Utility
+export const exportIncidentsPDF = (incidents) => {
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) return;
+
+  const totalInc = incidents.length;
+  const critical = incidents.filter(i => i.severity === 'Critical' || i.severity === 'High').length;
+  const resolved = incidents.filter(i => i.status === 'Resolved').length;
+  const inProgress = incidents.filter(i => i.status === 'In Progress' || i.status === 'Investigating').length;
+
+  const incidentRows = incidents.map(inc => `
+    <tr>
+      <td style="padding:8px; border:1px solid #cbd5e1; font-weight:bold;">${inc.id}</td>
+      <td style="padding:8px; border:1px solid #cbd5e1;">${inc.title}</td>
+      <td style="padding:8px; border:1px solid #cbd5e1;">${inc.category || 'N/A'}</td>
+      <td style="padding:8px; border:1px solid #cbd5e1;"><span style="padding:2px 8px; border-radius:4px; font-weight:600; background:${inc.severity === 'Critical' ? '#fee2e2; color:#b91c1c' : inc.severity === 'High' ? '#ffedd5; color:#c2410c' : '#f1f5f9; color:#475569'}">${inc.severity}</span></td>
+      <td style="padding:8px; border:1px solid #cbd5e1;">${inc.status}</td>
+      <td style="padding:8px; border:1px solid #cbd5e1;">${inc.assignee || 'Unassigned'}</td>
+      <td style="padding:8px; border:1px solid #cbd5e1;">${inc.displayTime || inc.timestamp || ''}</td>
+    </tr>
+  `).join('');
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <title>Incident Management Executive Summary Report</title>
+        <style>
+          body { font-family: 'Segoe UI', Roboto, sans-serif; margin: 30px; color: #0f172a; background: #fff; }
+          .header { text-align: center; border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 25px; }
+          .header h1 { margin: 0; color: #0f172a; font-size: 24px; }
+          .header p { margin: 5px 0 0 0; color: #64748b; font-size: 13px; }
+          .summary-box { display: flex; justify-content: space-around; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 25px; }
+          .summary-item { text-align: center; }
+          .summary-val { font-size: 22px; font-weight: bold; color: #1e3a8a; }
+          .summary-lbl { font-size: 12px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; }
+          table { width: 100%; border-collapse: collapse; font-size: 12px; }
+          th { background: #0f172a; color: #ffffff; padding: 10px; border: 1px solid #0f172a; text-align: left; }
+          .footer { margin-top: 30px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px; }
+          @media print {
+            .no-print { display: none; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="no-print" style="text-align: right; margin-bottom: 15px;">
+          <button onclick="window.print()" style="background:#2563eb; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">🖨️ Print / Save as PDF</button>
+        </div>
+        <div class="header">
+          <h1>🚨 Enterprise Incident Management Executive Report</h1>
+          <p>Generated on ${new Date().toLocaleString()} | Zynvex Solutions Incident Command Center</p>
+        </div>
+        <div class="summary-box">
+          <div class="summary-item"><div class="summary-val">${totalInc}</div><div class="summary-lbl">Total Incidents</div></div>
+          <div class="summary-item"><div class="summary-val" style="color:#dc2626">${critical}</div><div class="summary-lbl">Critical / High</div></div>
+          <div class="summary-item"><div class="summary-val" style="color:#d97706">${inProgress}</div><div class="summary-lbl">In Progress</div></div>
+          <div class="summary-item"><div class="summary-val" style="color:#16a34a">${resolved}</div><div class="summary-lbl">Resolved</div></div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Title</th>
+              <th>Category</th>
+              <th>Severity</th>
+              <th>Status</th>
+              <th>Assignee</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${incidentRows}
+          </tbody>
+        </table>
+        <div class="footer">
+          Confidential - Enterprise Incident Management System Report
+        </div>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+};
+
 export const resetToInitialIncidents = () => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_INCIDENTS));
   return INITIAL_INCIDENTS;
 };
+
 

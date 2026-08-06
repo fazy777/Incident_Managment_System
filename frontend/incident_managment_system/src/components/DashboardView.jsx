@@ -15,9 +15,10 @@ import {
   UserCheck,
   Download,
   FileJson,
+  Printer,
   XCircle
 } from 'lucide-react';
-import { formatRelativeTime, exportIncidentsCSV, exportIncidentsJSON } from '../services/incidentService';
+import { formatRelativeTime, exportIncidentsCSV, exportIncidentsJSON, exportIncidentsPDF } from '../services/incidentService';
 
 export default function DashboardView({ 
   incidents, 
@@ -76,6 +77,10 @@ export default function DashboardView({
           <span><strong>Incident Log Ready:</strong> Real-time incident tracking and monitoring active.</span>
         </div>
         <div className="banner-actions">
+          <button className="btn-secondary-sm" onClick={() => exportIncidentsPDF(filteredIncidents.length > 0 ? filteredIncidents : incidents)} title="Export Executive Printable PDF Report">
+            <Printer size={14} />
+            <span>PDF Report</span>
+          </button>
           <button className="btn-secondary-sm" onClick={() => exportIncidentsCSV(filteredIncidents.length > 0 ? filteredIncidents : incidents)} title="Export incidents to CSV file">
             <Download size={14} />
             <span>Export CSV</span>
