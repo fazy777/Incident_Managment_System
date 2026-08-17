@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ShieldAlert, CheckCircle, ChevronDown, ShieldCheck, Zap } from 'lucide-react';
 
 export default function FooterBar({ onStatusChange, ticketStatus, onEndChat }) {

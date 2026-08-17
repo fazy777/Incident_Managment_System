@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChevronRight, Clock, ShieldCheck } from 'lucide-react';
 
 export default function SubHeader({ activeTab }) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   Activity, 
   Server, 
@@ -15,20 +15,15 @@ import {
 } from 'lucide-react';
 import { 
   getSystemHealthServices, 
-  saveSystemHealthServices, 
   updateServiceStatus, 
   pingAllServices 
 } from '../services/systemHealthService';
 
 export default function SystemStatusView({ onReportOutage, onToast }) {
-  const [services, setServices] = useState([]);
+  const [services, setServices] = useState(() => getSystemHealthServices());
   const [filterStatus, setFilterStatus] = useState('ALL');
   const [filterCategory, setFilterCategory] = useState('ALL');
   const [isRefreshing, setIsRefreshing] = useState(false);
-
-  useEffect(() => {
-    setServices(getSystemHealthServices());
-  }, []);
 
   const handleRefreshPing = () => {
     setIsRefreshing(true);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { LayoutDashboard, BarChart3, PlusCircle, UserCheck, Settings, ShieldAlert, History, Activity } from 'lucide-react';
 
 export default function Sidebar({ activeTab, setActiveTab }) {

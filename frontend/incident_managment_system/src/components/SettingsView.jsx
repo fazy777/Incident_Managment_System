@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   Settings, 
   Users, 
@@ -8,9 +8,7 @@ import {
   Plus, 
   Trash2, 
   RotateCcw, 
-  Save, 
-  CheckCircle2,
-  Lock
+  Save
 } from 'lucide-react';
 import { resetToInitialIncidents } from '../services/incidentService';
 

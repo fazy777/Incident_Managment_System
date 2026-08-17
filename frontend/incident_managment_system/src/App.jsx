@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import SubHeader from './components/SubHeader';
@@ -32,8 +32,8 @@ function App() {
   const [authLoading, setAuthLoading] = useState(false);
 
   const [activeTab, setActiveTab] = useState('dashboard');
-  const [incidents, setIncidents] = useState([]);
-  const [auditLogs, setAuditLogs] = useState([]);
+  const [incidents, setIncidents] = useState(() => getIncidents());
+  const [auditLogs, setAuditLogs] = useState(() => getAuditLogs());
   const [selectedIncident, setSelectedIncident] = useState(null);
   const [draftIncidentData, setDraftIncidentData] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
@@ -45,15 +45,6 @@ function App() {
       setAuthLoading(false);
     });
     return () => unsubscribe();
-  }, []);
-
-  // Load initial incidents and audit logs from storage
-  useEffect(() => {
-    const loadedData = getIncidents();
-    setIncidents(loadedData);
-
-    const loadedLogs = getAuditLogs();
-    setAuditLogs(loadedLogs);
   }, []);
 
   // Logout handler

@@ -1,17 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   UserCheck, 
   PhoneCall, 
   Clock, 
-  ShieldCheck, 
-  AlertCircle, 
   Search, 
   Filter, 
   Radio, 
   ArrowRightLeft, 
-  Users,
   Send,
-  CheckCircle2,
   BellRing
 } from 'lucide-react';
 

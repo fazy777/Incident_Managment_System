@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   ShieldAlert, 
   AlertTriangle, 
@@ -6,7 +6,6 @@ import {
   User, 
   Mail, 
   Server, 
-  CheckCircle2, 
   X, 
   Send,
   Database,
@@ -14,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export default function AddIncidentForm({ initialData, onAddIncident, onClose, onCancel }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => ({
     title: '',
     category: 'Security Breach',
     severity: 'High',
@@ -23,17 +22,9 @@ export default function AddIncidentForm({ initialData, onAddIncident, onClose, o
     reporterEmail: '',
     assignee: 'SecOps / Alex Knapp',
     systemComponent: '',
-    description: ''
-  });
-
-  useEffect(() => {
-    if (initialData) {
-      setFormData((prev) => ({
-        ...prev,
-        ...initialData
-      }));
-    }
-  }, [initialData]);
+    description: '',
+    ...initialData
+  }));
 
   const [errorMsg, setErrorMsg] = useState('');
   const currentTimeString = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' ' + new Date().toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' });

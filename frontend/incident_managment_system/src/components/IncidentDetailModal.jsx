@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { 
   X, 
   Clock, 
@@ -6,13 +6,45 @@ import {
   User, 
   Server, 
   Send, 
-  Database,
   CheckSquare,
-  AlertTriangle,
-  Play,
-  CheckCircle2
+  Database
 } from 'lucide-react';
 import { formatRelativeTime } from '../services/incidentService';
+
+// Categorized Playbook Templates
+const getPlaybookForCategory = (cat) => {
+  switch (cat) {
+    case 'Security Breach':
+      return [
+        { id: 1, text: 'Isolate compromised host & revoke token secrets', done: true },
+        { id: 2, text: 'Notify On-Call CISO & Security Incident Response Team', done: true },
+        { id: 3, text: 'Audit recent access logs for IP pattern anomalies', done: false },
+        { id: 4, text: 'Deploy hardened credentials and run exploit patch', done: false }
+      ];
+    case 'Database':
+      return [
+        { id: 1, text: 'Analyze active connection pool locks & long queries', done: true },
+        { id: 2, text: 'Failover traffic to standby Read Replica', done: false },
+        { id: 3, text: 'Flush cache buffers and run DB index optimization', done: false },
+        { id: 4, text: 'Verify data replication integrity', done: false }
+      ];
+    case 'Infrastructure':
+    case 'API Gateway':
+      return [
+        { id: 1, text: 'Check CPU/Memory utilization across Kubernetes cluster', done: true },
+        { id: 2, text: 'Scale pod replicas +20% to absorb traffic spike', done: false },
+        { id: 3, text: 'Purge edge CDN cache & re-route gateway DNS', done: false },
+        { id: 4, text: 'Run synthetic API ping test', done: false }
+      ];
+    default:
+      return [
+        { id: 1, text: 'Verify severity impact & notify service owner', done: true },
+        { id: 2, text: 'Capture diagnostic heap dumps & system logs', done: true },
+        { id: 3, text: 'Apply hotfix patch or rollback to previous build', done: false },
+        { id: 4, text: 'Conduct post-incident verification check', done: false }
+      ];
+  }
+};
 
 export default function IncidentDetailModal({ 
   incident, 
@@ -21,49 +53,9 @@ export default function IncidentDetailModal({
   onAddTimelineEvent
 }) {
   const [newEventText, setNewEventText] = useState('');
-  
-  // Categorized Playbook Templates
-  const getPlaybookForCategory = (cat) => {
-    switch (cat) {
-      case 'Security Breach':
-        return [
-          { id: 1, text: 'Isolate compromised host & revoke token secrets', done: true },
-          { id: 2, text: 'Notify On-Call CISO & Security Incident Response Team', done: true },
-          { id: 3, text: 'Audit recent access logs for IP pattern anomalies', done: false },
-          { id: 4, text: 'Deploy hardened credentials and run exploit patch', done: false }
-        ];
-      case 'Database':
-        return [
-          { id: 1, text: 'Analyze active connection pool locks & long queries', done: true },
-          { id: 2, text: 'Failover traffic to standby Read Replica', done: false },
-          { id: 3, text: 'Flush cache buffers and run DB index optimization', done: false },
-          { id: 4, text: 'Verify data replication integrity', done: false }
-        ];
-      case 'Infrastructure':
-      case 'API Gateway':
-        return [
-          { id: 1, text: 'Check CPU/Memory utilization across Kubernetes cluster', done: true },
-          { id: 2, text: 'Scale pod replicas +20% to absorb traffic spike', done: false },
-          { id: 3, text: 'Purge edge CDN cache & re-route gateway DNS', done: false },
-          { id: 4, text: 'Run synthetic API ping test', done: false }
-        ];
-      default:
-        return [
-          { id: 1, text: 'Verify severity impact & notify service owner', done: true },
-          { id: 2, text: 'Capture diagnostic heap dumps & system logs', done: true },
-          { id: 3, text: 'Apply hotfix patch or rollback to previous build', done: false },
-          { id: 4, text: 'Conduct post-incident verification check', done: false }
-        ];
-    }
-  };
-
-  const [checklist, setChecklist] = useState([]);
-
-  useEffect(() => {
-    if (incident) {
-      setChecklist(getPlaybookForCategory(incident.category));
-    }
-  }, [incident]);
+  const [checklist, setChecklist] = useState(() => 
+    incident ? getPlaybookForCategory(incident.category) : []
+  );
 
   if (!incident) return null;
 
@@ -79,7 +71,7 @@ export default function IncidentDetailModal({
   };
 
   const calculateSlaStatus = () => {
-    const createdDate = new Date(incident.timestamp || Date.now());
+    const createdDate = incident.timestamp ? new Date(incident.timestamp) : new Date(0);
     const slaHours = getSlaHours(incident.severity);
     const deadline = new Date(createdDate.getTime() + slaHours * 60 * 60 * 1000);
     const now = new Date();

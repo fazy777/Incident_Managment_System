@@ -85,7 +85,7 @@ export const getSystemHealthServices = () => {
   }
   try {
     return JSON.parse(saved);
-  } catch (e) {
+  } catch {
     return defaultServices;
   }
 };

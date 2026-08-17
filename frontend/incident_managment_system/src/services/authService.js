@@ -90,7 +90,7 @@ function getLocalSessionUser() {
   try {
     const data = sessionStorage.getItem(SESSION_USER_KEY);
     return data ? JSON.parse(data) : null;
-  } catch (err) {
+  } catch {
     return null;
   }
 }
@@ -110,7 +110,7 @@ export function isEmailRegistered(email) {
  */
 export async function registerUser({ email, password, displayName, role = "SecOps Analyst" }) {
   const normalizedEmail = email.toLowerCase().trim();
-  let user = null;
+  let user;
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, normalizedEmail, password);
@@ -156,7 +156,7 @@ export async function loginUser(email, password) {
     throw new Error("ACCOUNT_NOT_REGISTERED: This email address is not registered in the system. You MUST register an account before logging in.");
   }
 
-  let user = null;
+  let user;
 
   try {
     const userCredential = await signInWithEmailAndPassword(auth, normalizedEmail, password);
@@ -165,9 +165,9 @@ export async function loginUser(email, password) {
     console.warn("Login Auth Warning:", error.code, error.message);
 
     if (error.code === "auth/wrong-password") {
-      throw new Error("INVALID_CREDENTIALS: Incorrect password. Please try again.");
+      throw new Error("INVALID_CREDENTIALS: Incorrect password. Please try again.", { cause: error });
     } else if (error.code === "auth/invalid-email") {
-      throw new Error("INVALID_EMAIL: Please enter a valid email address.");
+      throw new Error("INVALID_EMAIL: Please enter a valid email address.", { cause: error });
     } else {
       // Fallback local session user for valid registered account
       user = {
@@ -208,7 +208,7 @@ export async function logoutUser() {
   setLocalSessionUser(null);
   try {
     await signOut(auth);
-  } catch (err) {
+  } catch {
     // Ignore signout error
   }
 }

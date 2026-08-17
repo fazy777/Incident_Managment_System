@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
-  ShieldAlert, 
   Plus, 
   Bell, 
   Database,
@@ -11,10 +10,7 @@ import {
   Settings,
   History,
   LogOut,
-  User,
-  CheckCheck,
-  AlertTriangle,
-  Info
+  CheckCheck
 } from 'lucide-react';
 import { getUserRole } from '../services/authService';
 
@@ -148,42 +144,33 @@ export default function Navbar({ activeTab, setActiveTab, incidentCount, current
           </button>
 
           {showNotifications && (
-            <div style={{
-              position: 'absolute',
-              top: '40px',
-              right: '0',
-              width: '320px',
-              backgroundColor: '#0f172a',
-              border: '1px solid #1e293b',
-              borderRadius: '8px',
-              boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
-              zIndex: 1000,
-              padding: '12px'
-            }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', borderBottom: '1px solid #1e293b', paddingBottom: '8px' }}>
-                <span style={{ fontWeight: 'bold', fontSize: '13px', color: '#f8fafc' }}>Notifications Center</span>
+            <div className="notification-popover">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', borderBottom: '1px solid #e2e8f0', paddingBottom: '8px' }}>
+                <span style={{ fontWeight: '700', fontSize: '13px', color: '#0f172a' }}>Notifications Center</span>
                 {unreadCount > 0 && (
                   <button 
                     onClick={markAllRead} 
-                    style={{ background: 'none', border: 'none', color: '#3b82f6', fontSize: '11px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
+                    style={{ background: 'none', border: 'none', color: '#0284c7', fontSize: '11px', fontWeight: '700', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}
                   >
                     <CheckCheck size={12} /> Mark read
                   </button>
                 )}
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '250px', overflowY: 'auto' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '260px', overflowY: 'auto' }}>
                 {notifications.map(n => (
                   <div key={n.id} style={{
-                    padding: '8px',
-                    borderRadius: '6px',
-                    backgroundColor: n.unread ? '#1e293b' : '#0f172a',
-                    borderLeft: `3px solid ${n.type === 'critical' ? '#ef4444' : n.type === 'warning' ? '#f59e0b' : '#3b82f6'}`
+                    padding: '10px 12px',
+                    borderRadius: '8px',
+                    backgroundColor: n.unread ? '#f0f9ff' : '#f8fafc',
+                    border: '1px solid',
+                    borderColor: n.unread ? '#bae6fd' : '#e2e8f0',
+                    borderLeft: `4px solid ${n.type === 'critical' ? '#ef4444' : n.type === 'warning' ? '#f97316' : '#0284c7'}`
                   }}>
-                    <div style={{ fontSize: '12px', fontWeight: 'bold', color: n.type === 'critical' ? '#f87171' : n.type === 'warning' ? '#fbbf24' : '#60a5fa' }}>
+                    <div style={{ fontSize: '12px', fontWeight: '700', color: n.type === 'critical' ? '#dc2626' : n.type === 'warning' ? '#ea580c' : '#0284c7' }}>
                       {n.title}
                     </div>
-                    <div style={{ fontSize: '11px', color: '#94a3b8', marginTop: '2px' }}>{n.desc}</div>
-                    <div style={{ fontSize: '10px', color: '#64748b', marginTop: '4px', textAlign: 'right' }}>{n.time}</div>
+                    <div style={{ fontSize: '11.5px', color: '#475569', marginTop: '3px', fontWeight: '500' }}>{n.desc}</div>
+                    <div style={{ fontSize: '10px', color: '#94a3b8', marginTop: '6px', textAlign: 'right', fontWeight: '600' }}>{n.time}</div>
                   </div>
                 ))}
               </div>

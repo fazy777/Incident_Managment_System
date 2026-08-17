@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { 
   FileText, 
   Search, 
@@ -10,7 +10,6 @@ import {
   CheckCircle2, 
   AlertCircle, 
   UserCheck, 
-  Activity,
   X,
   History
 } from 'lucide-react';
