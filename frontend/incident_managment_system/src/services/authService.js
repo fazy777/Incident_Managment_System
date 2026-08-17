@@ -12,7 +12,7 @@ const REGISTERED_USERS_KEY = "incident_management_registered_users";
 const SESSION_USER_KEY = "incident_management_active_user_session";
 
 // Default pre-seeded registered accounts for system testing
-const DEFAULT_PRESEEDED_USERS = [
+export const DEFAULT_PRESEEDED_USERS = [
   {
     email: "admin@secops.io",
     displayName: "SecOps Admin Analyst",
